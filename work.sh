@@ -42,13 +42,24 @@ done
 
 [ "$Start" == "true" ] && {
     time_now=`date +%T`
-    echo $time_now > temp.log
+    if [ -d $HOME/WorkLog ]
+    then
+        if [ -f $HOME/WorkLog/temp.log ]
+        then
+            echo "Stop timer before starting a new timer."
+        else
+            echo $time_now > $HOME/WorkLog/temp.log
+        fi
+    else
+        mkdir ~/WorkLog
+        echo $time_now > $HOME/WorkLog/temp.log
+    fi
 }
 
 [ "$Stop" == "true" ] && {
-    if [ -f ./temp.log ]
+    if [ -f $HOME/WorkLog/temp.log ]
     then
-        filename="./temp.log"
+        filename="$HOME/WorkLog/temp.log"
         while read -r line
         do
             time_now=`date +%T`
@@ -56,23 +67,24 @@ done
             StartDate=$(date -u -d "$time_read" +"%s")
             FinalDate=$(date -u -d "$time_now" +"%s")
             time_log=`date -u -d "0 $FinalDate sec - $StartDate sec" +"%H:%M:%S"`
-            echo $time_log >> timelog.log
+            echo $time_log >> ~/WorkLog/timelog.log
             echo "Time logged: $time_log"
         done < "$filename"
-        rm ./temp.log
+        rm $HOME/WorkLog/temp.log
     else
         echo 'You must start timer before you can stop it.'
     fi
 }
 
 [ "$Show" == "true" ] && {
-    if [ -f ./temp.log ]
+    if [ -f $HOME/WorkLog/temp.log ]
     then
-        filename="./temp.log"
+        filename="$HOME/WorkLog/temp.log"
         while read -r line
         do
             time_now=`date +%T`
             time_read="$line"
+            echo $time_read
             StartDate=$(date -u -d "$time_read" +"%s")
             FinalDate=$(date -u -d "$time_now" +"%s")
             time_log=`date -u -d "0 $FinalDate sec - $StartDate sec" +"%H:%M:%S"`
