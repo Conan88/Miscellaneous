@@ -67,7 +67,7 @@ done
             StartDate=$(date -u -d "$time_read" +"%s")
             FinalDate=$(date -u -d "$time_now" +"%s")
             time_log=`date -u -d "0 $FinalDate sec - $StartDate sec" +"%H:%M:%S"`
-            echo $time_log >> ~/WorkLog/timelog.log
+            echo `date +%d-%m-%y` $time_log >> ~/WorkLog/timelog.log
             echo "Time logged: $time_log"
         done < "$filename"
         rm $HOME/WorkLog/temp.log
