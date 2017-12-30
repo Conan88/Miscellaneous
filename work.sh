@@ -9,10 +9,11 @@ USAGE(){
         echo "$REPLY"
     done <<-EOF
         SYNTAX:     work [OPTIONS]
-        OPTIONS:    --help|-h       - Displays this help information
-                    --start|-sta    - Starts timer
-                    --stop|-sto     - Stops timer
-                    --show|-sh      - Show current time
+        OPTIONS:    --help | -h       - Displays this help information
+                    --start | -sta    - Starts work timer
+                    --stop | -sto     - Stops work timer
+                    --show | -sh      - Show current worked time
+                    --add | -a        - Add a work time
 EOF
 }
 
@@ -33,6 +34,8 @@ do
             Stop="true" ;;
         --show|-sh)
             Show="true" ;;
+        --add|-a)
+            Add="true" ;;
         *)
             echo "Argument not suppored" ; exit 0 ;;
     esac
@@ -67,7 +70,7 @@ done
             StartDate=$(date -u -d "$time_read" +"%s")
             FinalDate=$(date -u -d "$time_now" +"%s")
             time_log=`date -u -d "0 $FinalDate sec - $StartDate sec" +"%H:%M:%S"`
-            echo `date +%d-%m-%y` $time_log >> ~/WorkLog/timelog.log
+            echo `date +%d-%m-%y` $time_log >> $HOME/WorkLog/timelog.log
             echo "Time logged: $time_log"
         done < "$filename"
         rm $HOME/WorkLog/temp.log
@@ -93,4 +96,11 @@ done
     else
         echo 'You must start timer before you can show it.'
     fi
+}
+
+[ "$Add" == "true" ] && {
+    read -p 'Date(DD-MM-YY): ' add_date
+    read -p 'Time(HH:MM:SS): ' add_time
+
+    echo $add_date $add_time >> $HOME/WorkLog/timelog.log
 }
