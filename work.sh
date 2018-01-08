@@ -52,6 +52,7 @@ done
             echo "Stop timer before starting a new timer."
         else
             echo $time_now > $HOME/WorkLog/temp.log
+            echo "Timer started"
         fi
     else
         mkdir ~/WorkLog
@@ -63,15 +64,16 @@ done
     if [ -f $HOME/WorkLog/temp.log ]
     then
         filename="$HOME/WorkLog/temp.log"
+        read -p 'Comment: ' comment
         while read -r line
         do
             time_now=`date +%T`
             time_read="$line"
             StartDate=$(date -u -d "$time_read" +"%s")
             FinalDate=$(date -u -d "$time_now" +"%s")
-            time_log=`date -u -d "0 $FinalDate sec - $StartDate sec" +"%H:%M:%S"`
-            echo `date +%d-%m-%y` $time_log >> $HOME/WorkLog/timelog.log
-            echo "Time logged: $time_log"
+            time_log=`date -u -d "0 $FinalDate sec - $StartDate sec" +"%H:%M:%S"`  
+            echo `date +%d-%m-%y` $time_log $comment >> $HOME/WorkLog/timelog.log
+            echo "Time logged: $time_log $comment"
         done < "$filename"
         rm $HOME/WorkLog/temp.log
     else
@@ -101,6 +103,7 @@ done
 [ "$Add" == "true" ] && {
     read -p 'Date(DD-MM-YY): ' add_date
     read -p 'Time(HH:MM:SS): ' add_time
+    read -p 'Comment: ' comment
 
-    echo $add_date $add_time >> $HOME/WorkLog/timelog.log
+    echo $add_date $add_time $comment>> $HOME/WorkLog/timelog.log
 }
